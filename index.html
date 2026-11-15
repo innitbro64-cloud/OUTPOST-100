@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#091426">
+<title>Outpost 100 | Junior Astronaut Mission Trainer</title>
+<style>
+:root{--bg:#081321;--panel:#122238;--panel2:#192d46;--line:#29445f;--text:#edf5ff;--muted:#a9bdd2;--cyan:#54d6e8;--gold:#ffca66;--green:#65d69a;--red:#ff7777;--purple:#b7a0ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -15%,#1d4260 0,#081321 48%);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+button,input{font:inherit}button{cursor:pointer;border:1px solid var(--line);border-radius:11px;padding:10px 13px;background:#203b59;color:var(--text);font-weight:700}button:hover{filter:brightness(1.15)}button:disabled{opacity:.4;cursor:not-allowed}
+header{padding:18px 14px;text-align:center;border-bottom:1px solid #29445f;background:#0a1728dd}header h1{font-size:clamp(23px,5vw,34px);margin:0;color:#fff;letter-spacing:.4px}header p{margin:5px 0 0;color:var(--muted);font-size:13px}
+.wrap{max-width:980px;margin:auto;padding:14px}.panel{background:linear-gradient(145deg,#142840,#102035);border:1px solid var(--line);border-radius:17px;padding:15px;margin:0 0 13px;box-shadow:0 8px 22px #0003}
+h2{font-size:18px;margin:0 0 10px}h3{font-size:15px;margin:0 0 7px}.muted{color:var(--muted)}.small{font-size:12px;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.hero{text-align:center;padding:24px 14px}.hero .planet{font-size:56px}.hero input{width:100%;max-width:420px;padding:12px;border-radius:10px;border:1px solid var(--line);background:#091727;color:white;margin:12px 0}
+.world{min-height:120px;text-align:left}.world strong{display:block;font-size:17px}.world span{font-size:12px;color:var(--muted);font-weight:400}
+.primary{background:linear-gradient(90deg,#087f9c,#1768a5);border:0}.orange{background:#9a5a16;border:0}.green{background:#176b4b;border:0}.red{background:#8b303b;border:0}.ghost{background:#142940}
+.topstats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.stat{background:#091827;border:1px solid var(--line);border-radius:11px;padding:8px;text-align:center}.stat b{display:block;font-size:20px}.stat span{font-size:11px;color:var(--muted)}
+.meters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.meterhead{display:flex;justify-content:space-between;font-size:13px}.track{height:10px;background:#07111d;border-radius:99px;overflow:hidden;margin-top:4px}.fill{height:100%;width:70%;border-radius:99px;transition:width .25s}
+.base{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;background:#081522;padding:8px;border-radius:12px}.cell{aspect-ratio:1;border:1px solid #35516a;border-radius:8px;background:linear-gradient(145deg,#263e55,#14283d);display:grid;place-items:center;font-size:clamp(18px,4vw,27px);padding:0}.cell.selected{outline:2px solid var(--gold)}.tools{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.tool{font-size:12px;padding:9px 4px}
+.shopitem{background:#0b1a2a;border:1px solid var(--line);border-radius:12px;padding:10px}.shopitem p{font-size:12px;color:var(--muted);min-height:35px;margin:4px 0 8px}.shopitem button{width:100%;font-size:12px;padding:8px}
+.callout{border-left:4px solid var(--cyan);background:#0a1b2c;padding:11px;border-radius:8px;margin-top:9px}.danger{border-left-color:var(--red)}.success{border-left-color:var(--green)}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}.tabs button{font-size:12px;padding:8px 10px}.hidden{display:none!important}
+.log{max-height:170px;overflow:auto;font-size:12px;color:var(--muted);padding-left:18px}.pill{display:inline-block;padding:3px 8px;border-radius:99px;background:#203b59;color:#cdeaff;font-size:11px}
+.modal{position:fixed;inset:0;background:#000b;display:grid;place-items:center;padding:18px;z-index:10}.modalbox{width:min(500px,100%);background:#142840;border:1px solid #4b6b89;border-radius:17px;padding:18px;max-height:85vh;overflow:auto}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:18px}
+@media(max-width:520px){.topstats{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:repeat(2,1fr)}.panel{padding:12px}.wrap{padding:10px}.tools{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header><h1>🚀 OUTPOST 100</h1><p>Junior Astronaut Mission Trainer · Moon & Mars Survival Lab</p></header>
+<main class="wrap">
+<section id="start">
+ <div class="panel hero">
+  <div class="planet">🌙 🔴 🧑‍🚀</div>
+  <h2>Build a base. Make hard choices. Bring your crew home.</h2>
+  <p class="muted">A learning simulation about the engineering trade-offs behind a lunar or Martian outpost.</p>
+  <input id="commander" maxlength="24" placeholder="Commander name (optional)">
+  <div class="grid">
+   <button class="world primary" onclick="startGame('Moon')">🌙 <strong>Moon Outpost</strong><span>Long daylight and night periods · low gravity · no substantial atmosphere</span></button>
+   <button class="world orange" onclick="startGame('Mars')">🔴 <strong>Mars Outpost</strong><span>24 h 37 min sol · thin CO₂ atmosphere · dust and cold</span></button>
+  </div>
+  <p class="small">Educational simulation: resource values, turn lengths and event probabilities are simplified for gameplay, not operational mission guidance. No live NASA telemetry is displayed.</p>
+ </div>
+ <div class="panel"><h2>🎓 What you will learn</h2><div class="grid">
+  <div>⚡ Power budgeting</div><div>🫁 Life-support planning</div><div>🛡️ Radiation protection</div><div>🥬 Food production</div><div>💧 Water recycling</div><div>⚖️ Engineering trade-offs</div>
+ </div></div>
+</section>
+
+<section id="game" class="hidden">
+ <div class="panel">
+  <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><b>👨‍🚀 <span id="name">Commander</span> <span class="pill" id="worldTag">MARS</span></b><b>MISSION TURN <span id="sol">1</span> / 100</b></div>
+  <div class="topstats" style="margin-top:10px">
+   <div class="stat"><b id="credits">160</b><span>🔧 Build credits</span></div><div class="stat"><b id="score">0</b><span>⭐ Learning score</span></div><div class="stat"><b id="crew">100</b><span>❤️ Crew health</span></div><div class="stat"><b id="built">0</b><span>🏗️ Structures</span></div>
+  </div>
+  <div class="callout" style="margin-top:10px"><b id="missionTitle">Mission objective</b><div id="missionDesc" class="small">Keep every critical system stable.</div></div>
+ </div>
+ <div class="panel">
+  <h2>📊 Outpost systems</h2><div class="meters" id="meters"></div>
+  <p class="small">Values are simplified game indicators (0–100), not real spacecraft telemetry or engineering design values.</p>
+ </div>
+ <div class="panel">
+  <h2>🗺️ Design your outpost</h2><p class="small">Choose a structure, then tap an empty tile. Layout bonuses reward thoughtful placement.</p>
+  <div class="tools" id="tools"></div><div style="height:9px"></div><div class="base" id="base"></div>
+  <div class="callout" id="layoutTip">Tip: place a shield beside the habitat to earn a layout bonus.</div>
+ </div>
+ <div class="panel">
+  <h2>🛠️ Construction & research</h2><div class="grid" id="shop"></div>
+  <p class="small">You may construct one major project per sol. Each project costs credits and consumes resources to operate.</p>
+ </div>
+ <div class="panel">
+  <h2>🧠 Mission control</h2><div id="event" class="callout"><b>ROBO:</b> Commander, inspect your systems before advancing the sol.</div>
+  <div class="grid" style="margin-top:10px"><button class="primary" onclick="advanceSol()">➡️ Advance to next sol</button><button class="ghost" onclick="openQuiz()">🧪 Science check (+score)</button></div>
+  <button class="green" style="width:100%;margin-top:8px" onclick="completeTask()">🎯 Complete today's crew task (+credits)</button>
+ </div>
+ <div class="panel"><h2>🛰️ NASA space-weather data</h2><div id="nasaFeed" class="small">NASA DONKI data has not been loaded yet.</div><button class="ghost" style="margin-top:8px" onclick="loadNasaData()">↻ Refresh NASA data</button><p class="small">Live NASA DONKI Solar Energetic Particle (SEP) event feed. It provides scientific context; game events and resource rates remain simplified scenarios.</p></div>
+ <div class="panel"><h2>📚 Science notes</h2><div id="science" class="small"></div><p class="small">Reference reading: <a href="https://science.nasa.gov/moon/" target="_blank" rel="noopener">NASA Moon</a> · <a href="https://science.nasa.gov/mars/" target="_blank" rel="noopener">NASA Mars</a> · <a href="https://www.nasa.gov/solar-system/" target="_blank" rel="noopener">NASA Solar System</a>. Game resource rates are original illustrative assumptions, not NASA mission specifications.</p></div>
+ <div class="panel"><h2>📜 Mission log</h2><ul class="log" id="log"><li>Mission started. Choose a construction project.</li></ul><div class="grid"><button class="ghost" onclick="saveGame(true)">💾 Save now</button><button class="red" onclick="confirmReset()">Start new mission</button></div></div>
+</section>
+<section id="end" class="hidden"><div class="panel hero"><div style="font-size:55px" id="endIcon">🏆</div><h2 id="endTitle">Mission report</h2><p id="endText"></p><p>Final score: <b id="endScore"></b></p><button class="primary" onclick="location.reload()">New mission</button></div></section>
+</main>
+<div id="modal" class="modal hidden"><div class="modalbox" id="modalContent"></div></div>
+<footer>Independent educational prototype · Not affiliated with or endorsed by NASA · Scientific facts and resource models are simplified for young learners</footer>
+<script>
+const $=id=>document.getElementById(id);
+const defs={
+ power:{name:"Power",icon:"⚡",color:"#ffc45d",desc:"Stored energy for life support, lights and equipment."},
+ food:{name:"Food",icon:"🥬",color:"#69d69b",desc:"Stored food and crops available to the crew."},
+ water:{name:"Water",icon:"💧",color:"#62c8ff",desc:"Usable water after recycling and storage."},
+ oxygen:{name:"Oxygen",icon:"🫁",color:"#9ddcff",desc:"Breathable oxygen reserves."},
+ shield:{name:"Radiation protection",icon:"🛡️",color:"#b7a0ff",desc:"A simplified measure of protective capacity."}
+};
+const structures=[
+ {id:"solar",name:"Solar array",icon:"☀️",cost:45,desc:"Raises power generation. Output can be reduced by dust or darkness.",effect:{power:22},tile:"☀️"},
+ {id:"greenhouse",name:"Greenhouse",icon:"🌱",cost:50,desc:"Produces food, but needs power and water to operate.",effect:{food:19},tile:"🌱"},
+ {id:"recycler",name:"Water recycler",icon:"♻️",cost:55,desc:"Improves water recovery and supports oxygen processing.",effect:{water:16,oxygen:8},tile:"♻️"},
+ {id:"habitat",name:"Pressurized habitat",icon:"🏠",cost:65,desc:"Adds crew accommodation and improves emergency resilience.",effect:{shield:5},tile:"🏠"},
+ {id:"shield",name:"Radiation shelter",icon:"🛡️",cost:60,desc:"Improves radiation protection; best placed next to habitat.",effect:{shield:23},tile:"🛡️"},
+ {id:"battery",name:"Energy storage",icon:"🔋",cost:48,desc:"Stores energy for periods when solar generation is low.",effect:{power:15},tile:"🔋"},
+ {id:"lab",name:"Science lab",icon:"🔬",cost:40,desc:"Supports research and earns learning score over time.",effect:{},tile:"🔬"},
+ {id:"farm",name:"Emergency food store",icon:"🥫",cost:32,desc:"Adds food reserves without greenhouse power demand.",effect:{food:15},tile:"🥫"},
+ {id:"waterTank",name:"Water tank",icon:"🚰",cost:35,desc:"Adds stored water for emergencies.",effect:{water:18},tile:"🚰"}
+];
+const facts={
+ Moon:"Moon facts: lunar gravity is about one-sixth of Earth's. The Moon has virtually no atmosphere to protect the surface. A lunar solar day is about 29.5 Earth days, so a location can experience roughly two weeks of daylight followed by roughly two weeks of night. Local terrain and lighting matter.",
+ Mars:"Mars facts: a sol is about 24 hours and 39 minutes. Its atmosphere is thin and mostly carbon dioxide. Mars has dust activity, cold conditions and lower gravity than Earth (about 38%). Solar power can be affected by dust accumulation and seasonal conditions."
+};
+const state={planet:"Mars",sol:1,credits:160,score:0,crew:100,systems:{power:76,food:76,water:76,oxygen:76,shield:68},map:Array(36).fill(""),selected:"solar",built:0,projectUsed:false,taskDone:false,quizDone:false,gameOver:false,logs:[],name:"Commander",research:0};
+let lastEvent="";
+function log(t){state.logs.unshift("Turn "+state.sol+": "+t);state.logs=state.logs.slice(0,35);$("log").innerHTML=state.logs.map(x=>"<li>"+x+"</li>").join("");}
+async function loadNasaData(){
+ const box=$("nasaFeed");if(!box)return;
+ box.textContent="Contacting NASA DONKI Solar Energetic Particle (SEP) API…";
+ const end=new Date(),start=new Date(end.getTime()-7*24*60*60*1000);
+ const iso=d=>d.toISOString().slice(0,10);
+ const url="https://api.nasa.gov/DONKI/SEP?startDate="+iso(start)+"&endDate="+iso(end)+"&api_key=DEMO_KEY";
+ const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),8000);
+ try{
+  const response=await fetch(url,{signal:controller.signal});if(!response.ok)throw new Error("HTTP "+response.status);
+  const data=await response.json();if(!Array.isArray(data))throw new Error("Unexpected NASA response format");
+  const dates=data.slice(0,5).map(item=>String(item.eventTime||item.event_date||"Date unavailable").slice(0,10));
+  box.textContent="NASA DONKI SEP events in the last 7 days: "+data.length+". "+(dates.length?"Recent event dates: "+dates.join(", "):"No SEP events were returned for this period.")+" Data retrieved: "+new Date().toISOString()+". This feed is context only; the game does not convert these events into real mission dose forecasts.";
+ }catch(err){box.textContent="NASA DONKI feed unavailable right now (network, API limit or browser restriction). The training simulation still works offline. No live NASA event data is being shown.";}
+ finally{clearTimeout(timeout);}
+}
+function startGame(p){
+ state.planet=p;state.name=$("commander").value.trim()||"Commander";
+ $("start").classList.add("hidden");$("game").classList.remove("hidden");
+ $("name").textContent=state.name;$("worldTag").textContent=p.toUpperCase();
+ $("science").textContent=facts[p];renderTools();renderShop();renderMap();update();loadNasaData();saveGame(false);
+}
+function renderTools(){
+ $("tools").innerHTML=structures.map(s=>`<button class="tool ${state.selected===s.id?"selected":""}" onclick="selectTool('${s.id}')">${s.icon} ${s.name}</button>`).join("");
+}
+function selectTool(id){state.selected=id;renderTools();$("layoutTip").textContent="Selected: "+structures.find(s=>s.id===id).name+". Tap an empty map tile to place it."}
+function renderMap(){
+ $("base").innerHTML=state.map.map((id,i)=>{let s=structures.find(x=>x.id===id);return `<button class="cell" aria-label="Tile ${i+1} ${s?s.name:"empty"}" onclick="place(${i})">${s?s.icon:"·"}</button>`}).join("");
+}
+function place(i){
+ if(state.gameOver)return;
+ if(state.map[i])return say("That tile is occupied. Choose an empty tile.");
+ buildStructure(state.selected,i);
+}
+function buildStructure(id,index){
+ if(state.gameOver)return;
+ if(state.projectUsed)return say("One major construction project per mission turn. Advance the turn to build again.");
+ const s=structures.find(x=>x.id===id);if(!s)return say("Unknown structure selected.");
+ if(state.credits<s.cost)return say("Not enough credits. Complete the crew task or plan your next turn.");
+ if(index===undefined||index===null)index=state.map.findIndex(x=>!x);
+ if(index<0||index>=state.map.length||state.map[index])return say("No empty map tile is available. Choose an empty tile first.");
+ state.credits-=s.cost;state.projectUsed=true;state.map[index]=s.id;state.built++;
+ applyEffect(s);state.score+=8;log("Constructed "+s.name+" on the outpost map.");
+ renderMap();renderTools();update();saveGame(false);
+ say("Project complete: "+s.name+" is now visible on your map. Review the resource changes before advancing.","success");
+}
+function renderShop(){
+ $("shop").innerHTML=structures.map(s=>`<div class="shopitem"><b>${s.icon} ${s.name}</b><p>${s.desc}</p><div class="small">Cost: ${s.cost} credits</div><button onclick="construct('${s.id}')">Construct</button></div>`).join("");
+}
+function construct(id){buildStructure(id,null)}
+function applyEffect(s){for(const k in s.effect)state.systems[k]=clamp(state.systems[k]+s.effect[k]);}
+function clamp(n){const v=Number(n);if(!Number.isFinite(v))return 0;return Math.max(0,Math.min(100,Math.round(v)))}
+function layoutBonus(){
+ let bonus=0;
+ for(let i=0;i<36;i++)if(state.map[i]==="shield"){
+  let ns=[i-1,i+1,i-6,i+6].filter(n=>n>=0&&n<36&&Math.abs(Math.floor(n/6)-Math.floor(i/6))+Math.abs(n%6-i%6)===1);
+  if(ns.some(n=>state.map[n]==="habitat"))bonus+=5;
+ }
+ return bonus;
+}
+function update(){
+ $("sol").textContent=state.sol;$("credits").textContent=state.credits;$("score").textContent=state.score;$("crew").textContent=state.crew;$("built").textContent=state.built;
+ $("meters").innerHTML=Object.entries(defs).map(([k,d])=>`<div><div class="meterhead"><b>${d.icon} ${d.name}</b><b>${clamp(state.systems[k])}%</b></div><div class="track"><div class="fill" style="width:${clamp(state.systems[k])}%;background:${d.color}"></div></div></div>`).join("");
+ $("missionTitle").textContent=state.planet+" Outpost · Sol "+state.sol;
+ $("missionDesc").textContent=state.projectUsed?"Construction used this sol. Check resources and decide whether to advance.":"Choose one construction project or complete a crew task.";
+ $("layoutTip").textContent="Map structures: "+state.built+" · Habitat-adjacent shield bonus: +"+layoutBonus()+" protection points when layout is reviewed.";
+}
+function say(t,type=""){const e=$("event");e.className="callout "+type;e.innerHTML="<b>ROBO:</b> "+t}
+function completeTask(){
+ if(state.taskDone)return say("Today's crew task is already complete. Advance to the next sol for a new task.");
+ state.taskDone=true;state.credits+=25;state.score+=10;
+ const tasks=["Inspect the habitat seals","Check water-recycling filters","Review the greenhouse growth log","Run a power-budget meeting"];
+ say("Crew task complete: "+tasks[(state.sol-1)%tasks.length]+". You earned 25 credits and 10 learning points.","success");
+ log("Completed crew task.");update();saveGame(false);
+}
+const events=[
+ {title:"Solar particle event",text:"A space-weather alert arrives. What should the crew do?",opts:[["Move crew to the best-shielded area and follow radiation procedures",{shield:5,crew:2},"Good decision: sheltering reduces exposure risk."],["Continue outdoor work",{crew:-12,shield:-8},"Risky: unnecessary exposure increases crew risk."],["Turn off every system",{power:-12},"Power loss does not provide radiation protection."]]},
+ {title:"Dust accumulation",text:"Dust is reducing the performance of exposed equipment.",opts:[["Schedule a panel-cleaning activity",{power:8,credits:-8},"Good maintenance restores some power, with a time and resource cost."],["Ignore the warning",{power:-13},"Dust can reduce solar-array output."],["Build another greenhouse",{power:-8,food:4},"A greenhouse does not solve a dusty solar array."]]},
+ {title:"Water leak warning",text:"A sensor reports a possible water leak.",opts:[["Isolate the affected line and inspect it",{water:7,credits:-8},"Correct: isolate, inspect and repair the suspected leak."],["Keep using water normally",{water:-15,crew:-3},"Ignoring a leak can waste a critical resource."],["Shut down oxygen monitoring",{oxygen:-10},"Oxygen monitoring is not a water-leak repair."]]},
+ {title:"Greenhouse power demand",text:"The greenhouse needs extra energy during a low-power period.",opts:[["Reduce nonessential loads and protect life support",{power:4,food:-2},"Good load management prioritizes crew-critical systems."],["Power every experiment at once",{power:-13},"Unmanaged loads can drain reserves."],["Stop all food production permanently",{food:-10},"This creates a future food-supply problem."]]},
+ {title:"Habitat pressure anomaly",text:"A pressure sensor reading is outside its expected range. Treat this as a serious warning.",opts:[["Follow emergency checklist, isolate and verify sensors",{oxygen:3,crew:2,credits:-8},"Correct: follow procedures and verify the reading before repair."],["Open the hatch to check outside",{crew:-20,oxygen:-12},"Never open a pressurized habitat to investigate an anomaly."],["Ignore all alarms",{crew:-12,oxygen:-8},"Ignoring a possible pressure problem endangers the crew."]]}
+];
+function advanceSol(){
+ if(state.gameOver)return;
+ if(state.sol>=100)return finish(true);
+ const counts=Object.fromEntries(structures.map(x=>[x.id,0]));
+ state.map.forEach(id=>{if(Object.prototype.hasOwnProperty.call(counts,id))counts[id]++;});
+ const count=id=>Number.isFinite(counts[id])?counts[id]:0;
+ const s=state.systems;
+ // Simplified learning model: each turn is a game turn, not a literal Earth day or lunar sol.
+ s.power-=state.planet==="Moon"?9:7;s.food-=5;s.water-=6;s.oxygen-=5;s.shield-=2;
+ s.power+=count("solar")*(state.planet==="Moon"?5:4)+count("battery")*2;
+ s.food+=count("greenhouse")*4;s.water+=count("recycler")*3+count("waterTank");
+ s.oxygen+=count("recycler")*2;s.shield+=layoutBonus();
+ s.power-=count("greenhouse")*3;s.water-=count("greenhouse")*2;
+ Object.keys(s).forEach(k=>s[k]=clamp(s[k]));
+ state.sol++;state.projectUsed=false;state.taskDone=false;state.quizDone=false;
+ if(state.sol%3===0){const ev=events[Math.floor(Math.random()*events.length)];showEvent(ev);}
+ else say("New mission turn started. Check each system and plan your next trade-off.");
+ if(s.oxygen<20||s.water<15||s.food<15||s.power<12){state.crew=clamp(state.crew-12);say("Critical shortage detected. Crew health is falling. Restore life-support resources immediately.","danger");}
+ if(state.crew<=0||Object.values(s).some(v=>!Number.isFinite(v)||v<=0)){finish(false);return;}
+ if(state.sol>=100){finish(true);return;}
+ log("Advanced to mission turn "+state.sol+". Resource use and production calculated.");update();saveGame(false);
+}
+function showEvent(ev){
+ const choices=ev.opts.map((o,i)=>`<button class="ghost" style="width:100%;text-align:left;margin:5px 0" onclick="resolveEvent(${i})">${o[0]}</button>`).join("");
+ lastEvent=ev.title;state.pendingEvent=ev;
+ $("modalContent").innerHTML=`<span class="pill">MISSION CONTROL ALERT</span><h2 style="margin-top:10px">${ev.title}</h2><p>${ev.text}</p>${choices}<p class="small">Choose carefully. The explanation will tell you why the choice matters.</p>`;
+ $("modal").classList.remove("hidden");
+}
+function resolveEvent(i){
+ const o=state.pendingEvent.opts[i];for(const k in o[1]){if(k==="credits")state.credits=Math.max(0,state.credits+o[1][k]);else if(k==="crew")state.crew=clamp(state.crew+o[1][k]);else state.systems[k]=clamp(state.systems[k]+o[1][k]);}
+ state.score+=o[1].crew>=0?5:0;log("Emergency decision: "+o[0]);$("modal").classList.add("hidden");say(o[2],o[1].crew<0?"danger":"success");update();saveGame(false);
+}
+const quiz=[
+ {q:"Why is radiation protection important on the Moon and Mars?",a:["They lack Earth's thick global magnetic and atmospheric protection","Their gravity is stronger than Earth's","Sunlight cannot reach them"],c:0,why:"The Moon has no global magnetic field and virtually no atmosphere; Mars has a thin atmosphere and no Earth-like global magnetic field. Protection and mission-specific radiation planning matter."},
+ {q:"Why can a lunar outpost not rely on solar panels all the time?",a:["The lunar night at a location can last roughly two Earth weeks","The Moon is always between Earth and Sun","Solar panels do not work in space"],c:0,why:"A lunar solar day is about 29.5 Earth days. Some locations experience long periods without sunlight."},
+ {q:"What is a sol?",a:["A Martian solar day","A Mars year","A type of space suit"],c:0,why:"A Martian sol lasts about 24 hours and 39 minutes."},
+ {q:"What is a sensible first response to a suspected habitat pressure leak?",a:["Follow emergency procedures and isolate the affected area","Open the hatch","Ignore the alarm"],c:0,why:"Crew safety procedures, isolation and sensor verification are essential. Never casually open a pressurized habitat."},
+ {q:"Why do greenhouses create an engineering trade-off?",a:["They can produce food but need power, water and maintenance","They make oxygen without any energy","They eliminate all radiation"],c:0,why:"Food production can support a crew, but controlled growing systems require energy, water, equipment and care."}
+];
+function openQuiz(){
+ if(state.quizDone)return say("You have completed this sol's science check. A new question will be available next sol.");
+ const q=quiz[(state.sol-1)%quiz.length];
+ $("modalContent").innerHTML=`<span class="pill">SCIENCE CHECK</span><h2 style="margin-top:10px">${q.q}</h2>${q.a.map((a,i)=>`<button class="ghost" style="width:100%;text-align:left;margin:5px 0" onclick="answerQuiz(${i})">${String.fromCharCode(65+i)}. ${a}</button>`).join("")}`;
+ $("modal").classList.remove("hidden");state.currentQuiz=q;
+}
+function answerQuiz(i){
+ const q=state.currentQuiz;state.quizDone=true;
+ const correct=i===q.c;if(correct)state.score+=15;else state.score+=3;
+ $("modalContent").innerHTML=`<h2>${correct?"✅ Correct!":"📘 Good try — learn this:"}</h2><p>${q.why}</p><p class="small">${correct?"+15":" +3"} learning points</p><button class="primary" style="width:100%" onclick="closeModal()">Continue mission</button>`;
+ log(correct?"Science check correct.":"Science check attempted; reviewed explanation.");update();saveGame(false);
+}
+function closeModal(){$("modal").classList.add("hidden")}
+function finish(win){
+ state.gameOver=true;$("game").classList.add("hidden");$("end").classList.remove("hidden");
+ $("endIcon").textContent=win?"🏆":"🛰️";$("endTitle").textContent=win?"100-TURN CAMPAIGN COMPLETE":"MISSION ENDED";
+ $("endText").textContent=win?"Your outpost completed the 100-turn learning campaign. Review your decisions and see what you learned.":"A critical system reached zero or crew health was depleted. Review the mission log, learn from the trade-offs and try a new strategy.";
+ $("endScore").textContent=state.score+" · "+state.sol+" sols reached";localStorage.removeItem("outpost100save");
+}
+function saveGame(show){
+ try{const data={...state,saveVersion:2};localStorage.setItem("outpost100save",JSON.stringify(data));if(show)say("Mission saved on this device.","success");}
+ catch(e){if(show)say("This browser could not save the mission. Keep this tab open.","danger");}
+}
+function loadSaved(){
+ try{const raw=localStorage.getItem("outpost100save");if(!raw)return false;const d=JSON.parse(raw);if(!d||d.saveVersion!==2||!d.planet||!Array.isArray(d.map)||d.map.length!==36)return false;
+ if(!d.systems||!['power','food','water','oxygen','shield'].every(k=>Number.isFinite(Number(d.systems[k]))))throw new Error('Invalid saved resources');
+ if(!['Moon','Mars'].includes(d.planet)||!Number.isFinite(Number(d.sol))||!Number.isFinite(Number(d.credits))||!Number.isFinite(Number(d.score))||!Number.isFinite(Number(d.crew)))throw new Error('Invalid saved counters');
+ if(!d.map.every(id=>id===''||structures.some(x=>x.id===id)))throw new Error('Invalid saved map');
+ Object.assign(state,d);Object.keys(state.systems).forEach(k=>state.systems[k]=clamp(state.systems[k]));
+ state.sol=Math.max(1,Math.min(100,Math.floor(Number(state.sol))));state.credits=Math.max(0,Math.floor(Number(state.credits)));state.score=Math.max(0,Math.floor(Number(state.score)));state.crew=clamp(state.crew);state.built=state.map.filter(Boolean).length;
+ $("start").classList.add("hidden");$("game").classList.remove("hidden");$("name").textContent=state.name;$("worldTag").textContent=state.planet.toUpperCase();$("science").textContent=facts[state.planet]||facts.Mars;renderTools();renderShop();renderMap();update();loadNasaData();say("Saved mission restored. Continue where you left off.","success");return true;
+ }catch(e){return false}
+}
+function confirmReset(){if(confirm("Start a new mission? Your saved mission on this device will be replaced.")){localStorage.removeItem("outpost100save");location.reload()}}
+if(!loadSaved()){}
+</script>
+</body>
+</html>
